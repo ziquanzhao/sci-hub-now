@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Sci-Hub X Now!",
   "short_name": "sci-hub-x-now",
-  "version": "0.0.3",
+  "version": "0.0.3.1",
   "author": "Orçun Özdemir and Lucas Sterzinger and Gerry Chen",
   "homepage_url": "https://github.com/gchenfc/sci-hub-now",
   "description": "Free access to academic papers with just a single click via sci-hub!",
