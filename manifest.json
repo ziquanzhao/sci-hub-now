@@ -7,14 +7,22 @@
   "homepage_url": "https://github.com/gchenfc/sci-hub-now",
   "description": "Free access to academic papers with just a single click via sci-hub!",
   "icons": {
-    "48": "icons/48x48.png",
-    "96": "icons/96x96.png"
+    "16": "icons/16x16_ico.png",
+    "32": "icons/32x32_ico.png",
+    "48": "icons/48x48_ico.png",
+    "96": "icons/96x96_ico.png",
+    "128": "icons/128x128_ico.png",
+    "336": "icons/336x336.png"
   },
   "browser_action": {
     "browser_style": true,
     "default_icon": {
-      "48": "icons/48x48.png",
-      "96": "icons/96x96.png"
+      "16": "icons/16x16_ico.png",
+      "32": "icons/32x32_ico.png",
+      "48": "icons/48x48_ico.png",
+      "96": "icons/96x96_ico.png",
+      "128": "icons/128x128_ico.png",
+      "336": "icons/336x336.png"
     },
     "default_title": "Sci-Hub X Now!",
     "theme_icons": [
