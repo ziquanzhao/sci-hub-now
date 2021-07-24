@@ -1,13 +1,57 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      td, th {border:  1px solid;
+        padding: 0px 10px;
+      }
+    </style>
   </head>
   <body>
     <h1>Sci-hub X Now!</h1>
     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-      <p style="margin-right: 1em;">Sci-Hub url:</p>
+      <span style="margin-right: 1em;" title="The top level domain for sci-hub.  Since sci-hub mirrors are frequently taken down, you can change this to a working link.  Note: you must include the https:// and trailing /">
+        Sci-Hub url:
+      </span>
       <input type="text" id="url"/>
+      <!-- <button type="button" id="autofetch">Auto-fetch</button> -->
     </div>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+      <span style="margin-right: 1em;" title="Opens sci-hub in a new tab instead of the current tab">
+        Open in new tab:
+      </span>
+      <input type="checkbox" id="newtab"/>
+    </div>
+    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+      <span style="margin-right: 1em;" title="Automatically check if the sci-hub mirror is down each time you click the extension">
+        Auto-check sci-hub mirror on each paper request:
+      </span>
+      <input type="checkbox" id="autocheck" checked="true"/>
+    </div>
+    <hr />
+    <div>
+      Here is a list of back-up mirrors.
+      Click "select" to paste the mirror into the "Sci-hub URL" field above.
+    </div>
+    <div>
+      <table id="links" style="margin: auto;">
+        <th style="background-color: whitesmoke;" colspan="2">
+          Sci-hub back-up mirrors:
+        </th>
+      </table>
+    </div>
+    <div style="clear:both"></div>
+    <div style="margin:auto">
+      <p style="float:left; width:50px;">Legend: </p>
+      <p style="background-color: lightgreen; float:left; text-align: center; width:50px;">working</p>
+      <p style="background-color: pink; float:left; text-align: center; width:70px;">not working</p>
+      <p style="background-color: #aaa; float:left; text-align: center; width:50px;">loading</p>
+    <div style="clear:both"></div>
+    <hr />
     <div>
       <p>
         Please visit the <a href="https://github.com/gchenfc/sci-hub-now/issues">github</a> to give feedback.

@@ -6,23 +6,51 @@ const doiRegex = new RegExp(
 
 var sciHubUrl;
 const trueRed = "#BC243C";
+var openInNewTab = false;
+var autoCheckServer = true;
+const defaults = {
+  "scihub-url": "https://sci-hub.st/",
+  "open-in-new-tab": false,
+  "autocheck-server": true
+};
 
 function resetBadgeText() {
   browser.browserAction.setBadgeText({ text: "" });
 }
 
-function setUrl(url) {
-  sciHubUrl = url;
-};
-function iniitalizeUrl () {
-  chrome.storage.local.get(["scihub-url"], function (result) {
-    if (!("scihub-url" in result)) {
-      result["scihub-url"] = "https://sci-hub.st/";
+function setthing(name, value) {
+  switch(name) {
+    case "scihub-url":
+      sciHubUrl = value;
+      break;
+    case "open-in-new-tab":
+      openInNewTab = value;
+      break;
+    case "autocheck-server":
+      autoCheckServer = value;
+      break;
+  }
+}
+function initialize(name) {
+  chrome.storage.local.get([name], function(result) {
+    if (!(name in result)) {
+      result[name] = defaults[name];
       chrome.storage.local.set(result, function () {});
     }
-    sciHubUrl = result["scihub-url"];
-  });
-};
+    setthing(name, result[name]);
+  })
+}
+function checkServerStatus() {
+  var img = document.body.appendChild(document.createElement("img"));
+  img.height = 0;
+  img.visibility = "hidden";
+  img.onerror = function () {
+    if (confirm("Looks like the mirror "+sciHubUrl+" is dead.  Would you like to go to the options page to select a different mirror?")) {
+      browser.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id}).then();
+    }
+  }
+  img.src = sciHubUrl + "/misc/img/raven_1.png";
+}
 
 function getHtml(htmlSource) {
   htmlSource = htmlSource[0];
@@ -30,10 +58,17 @@ function getHtml(htmlSource) {
   if (foundRegex) {
     foundRegex = foundRegex[0].split(";")[0];
     // console.log("Regex: " + foundRegex);
-    var creatingTab = browser.tabs.create({
-      url: sciHubUrl + foundRegex,
-    });
-    creatingTab.then();
+    if (openInNewTab) {
+      var creatingTab = browser.tabs.create({
+        url: sciHubUrl + foundRegex,
+      });
+      creatingTab.then();
+    } else {
+      browser.tabs.update(undefined, {url: sciHubUrl + foundRegex});
+    }
+    if (autoCheckServer) {
+      checkServerStatus();
+    }
   } else {
     browser.browserAction.setBadgeTextColor({ color: "white" });
     browser.browserAction.setBadgeBackgroundColor({ color: trueRed });
@@ -51,15 +86,24 @@ function executeJs() {
 browser.contextMenus.create({
   id: "doi-selection",
   title: "Find article by DOI!",
-  contexts: ["selection"],
+  contexts: ["selection","link"],
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
+  // if right-clicked on link, then parse link address first
+  var doi = info.linkUrl;
+  doi = doi ? doi.match(doiRegex)[0].split(";")[0] : doi;
+  // if link not valid, try the highlighted text
+  if (!doi) {
+    doi = info.selectionText;
+  }
   var creatingTab = browser.tabs.create({
-    url: sciHubUrl + info.selectionText,
+    url: sciHubUrl + doi,
   });
 });
 
 browser.browserAction.onClicked.addListener(executeJs);
 browser.tabs.onUpdated.addListener(resetBadgeText);
-iniitalizeUrl();
+for (const property in defaults) {
+  initialize(property);
+}
